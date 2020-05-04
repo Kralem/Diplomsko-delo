@@ -2,7 +2,7 @@ function laplac(subj, rec)
 %funkcija za parametre prebere ime direktorija ter številko prvega posnetka
 %opomba: ne želimo brati prvih dveh posnetkov, saj te nimajo aktivnosti, ki
 %jih iščemo
-  db="eegmmidb";
+  db="baza";
   subject = string(subj);
   record=[];
   for i=0:2
@@ -24,14 +24,14 @@ function laplac(subj, rec)
     [sig, fs, tm] = rdsamp(recName, 1:64); %branje posnetka
     [T0, T1, T2] = getIntervals(recName,'event', fs, size(sig,1)); %pridobitev intervalov
     sig=sig';
-    izpis=strcat("Racunam laplaca za subjekta ",subject);
+    izpis=strcat("Racunam laplaca za subjekta ",recName);
     disp(izpis);
     for n=1:length(sig(1,:)) %laplacova formula, pdf št. 8
         sig_tmp(1,n) = sig(13,n) - 1/4 * (sig(11,n) + sig(36,n) + sig(42,n) + sig(53,n));
         sig_tmp(2,n) = sig(9,n) - 1/4 * (sig(11,n) + sig(32,n) + sig(41,n) + sig(49,n));
     end
     sig=sig_tmp;
-    izpis=strcat("Berem intervale za subjekta ",subject);
+    izpis=strcat("Berem intervale za subjekta ",recName);
     disp(izpis);
     for j=1:size(T1, 1)  %preberemo intervale zamišljanja motoričnih aktivnosti
       t1s{end+1}=sig(:, T1(j,1):T1(j,2));
@@ -69,9 +69,9 @@ function laplac(subj, rec)
   dimenzija=size(sig);
   dimenzija %izpis dimenzije, mora biti približno 2x20000
   
-  scatter(lvt1(:,1), lvt1(:,2)); %diagram raztrosa
-  hold on
-  scatter(lvt2(:,1), lvt2(:,2)); 
+  %scatter(lvt1(:,1), lvt1(:,2)); %diagram raztrosa
+  %hold on
+  %scatter(lvt2(:,1), lvt2(:,2)); 
   
   featVFile = strcat(subject,'featureVectorsL.txt');
   classFile = strcat(subject,'referenceClassL.txt');
