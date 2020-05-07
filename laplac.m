@@ -23,6 +23,8 @@ function laplac(subj, rec)
     disp(recName);
     [sig, fs, tm] = rdsamp(recName, 1:64); %branje posnetka
     [T0, T1, T2] = getIntervals(recName,'event', fs, size(sig,1)); %pridobitev intervalov
+    T1
+    T2
     sig=sig';
     izpis=strcat("Racunam laplaca za subjekta ",recName);
     disp(izpis);
@@ -40,56 +42,59 @@ function laplac(subj, rec)
       t2s{end+1}=sig(:, T2(j,1):T2(j,2));
     end
   end
-  f = [0 8 8 13 13 fs/2]/(fs/2); %definicija filtra
-  a = [0 0 1 1 0 0 ];
-  n = 35; 
-  b = firls(n, f, a);
   
-  t1s(1)=[];
-  t2s(1)=[];
- 
-  lvt1=[];
-  lvt2=[];
- 
-  for i=1:size(t1s,2)
-      tmp = cell2mat(t1s(i));
-      tmp = [tmp(1,:).',tmp(size(tmp,1),:).'].';
-      tmp = filter(b,1,tmp);
-      lvt1(i,1) = log(var(tmp(1,:)));
-      lvt1(i,2) = log(var(tmp(2,:)));      
+  if size(t1s,2) > 0 && size(t2s,2) > 0 %varovalka, če subjekt nima intervalov zamišljanja T1 ali T2
+  
+      f = [0 8 8 13 13 fs/2]/(fs/2); %definicija filtra
+      a = [0 0 1 1 0 0 ];
+      n = 35; 
+      b = firls(n, f, a);
+      t1s(1)=[];
+      t2s(1)=[];
+
+      lvt1=[];
+      lvt2=[];
+
+      for i=1:size(t1s,2)
+          tmp = cell2mat(t1s(i));
+          tmp = [tmp(1,:).',tmp(size(tmp,1),:).'].';
+          tmp = filter(b,1,tmp);
+          lvt1(i,1) = log(var(tmp(1,:)));
+          lvt1(i,2) = log(var(tmp(2,:)));      
+      end
+
+      for i=1:size(t2s,2)
+          tmp = cell2mat(t2s(i));
+          tmp = [tmp(1,:).',tmp(size(tmp,1),:).'].';
+          tmp = filter(b,1,tmp);
+          lvt2(i,1) = log(var(tmp(1,:)));
+          lvt2(i,2) = log(var(tmp(2,:)));      
+      end
+      dimenzija=size(sig);
+      dimenzija %izpis dimenzije, mora biti približno 2x20000
+
+      %scatter(lvt1(:,1), lvt1(:,2)); %diagram raztrosa
+      %hold on
+      %scatter(lvt2(:,1), lvt2(:,2)); 
+
+      featVFile = strcat(subject,'featureVectorsL.txt');
+      classFile = strcat(subject,'referenceClassL.txt');
+      fvf = fopen(featVFile, "wt");
+      rcf = fopen(classFile, "wt");
+
+      for i=1:size(lvt1,1)
+          fprintf(fvf, "%.8f %.8f\n", lvt1(i,1), lvt1(i,2));
+          fprintf(rcf, "T1\n");
+      end
+
+      for i=1:size(lvt2,1)
+          fprintf(fvf, "%.8f %.8f\n", lvt2(i,1), lvt2(i,2));
+          fprintf(rcf, "T2\n");
+      end
+      fclose(fvf);
+      fclose(rcf);
+  
   end
-  
-  for i=1:size(t2s,2)
-      tmp = cell2mat(t2s(i));
-      tmp = [tmp(1,:).',tmp(size(tmp,1),:).'].';
-      tmp = filter(b,1,tmp);
-      lvt2(i,1) = log(var(tmp(1,:)));
-      lvt2(i,2) = log(var(tmp(2,:)));      
-  end
-  dimenzija=size(sig);
-  dimenzija %izpis dimenzije, mora biti približno 2x20000
-  
-  %scatter(lvt1(:,1), lvt1(:,2)); %diagram raztrosa
-  %hold on
-  %scatter(lvt2(:,1), lvt2(:,2)); 
-  
-  featVFile = strcat(subject,'featureVectorsL.txt');
-  classFile = strcat(subject,'referenceClassL.txt');
-  
-  fvf = fopen(featVFile, "wt");
-  rcf = fopen(classFile, "wt");
-  
-  for i=1:size(lvt1,1)
-      fprintf(fvf, "%.8f %.8f\n", lvt1(i,1), lvt1(i,2));
-      fprintf(rcf, "T1\n");
-  end
-  
-  for i=1:size(lvt2,1)
-      fprintf(fvf, "%.8f %.8f\n", lvt2(i,1), lvt2(i,2));
-      fprintf(rcf, "T2\n");
-  end
-  fclose(fvf);
-  fclose(rcf);
   
 end
   

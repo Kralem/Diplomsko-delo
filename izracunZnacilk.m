@@ -1,5 +1,5 @@
 function izracunZnacilk(subj, rec) 
-  db = "eegmmidb";
+  db = "baza";
   subject = string(subj);
   record=[];
   for i=0:2
@@ -17,8 +17,10 @@ function izracunZnacilk(subj, rec)
     recName=convertStringsToChars(recName);
     disp(recName);
     [sig, fs, tm] = rdsamp(recName, 1:64); % ker ne rabimo zadnjega kanala
-    [T0, T1, T2] = getIntervals(recName,'event', fs, size(sig,1));
+    [T0, T1, T2] = getIntervals(recName,'event', fs, size(sig,1)); %pridobimo intervale
     sig=sig';
+    izpis=strcat("Berem intervale za subjekta ",recName);
+    disp(izpis);
     for j=1:size(T1, 1)
       t1s{end+1}=sig(:, T1(j,1):T1(j,2));
     end
@@ -26,60 +28,65 @@ function izracunZnacilk(subj, rec)
       t2s{end+1}=sig(:, T2(j,1):T2(j,2));
     end
   end
+  
+  if size(t1s,2) > 0 && size(t2s,2) > 0 %varovalka, če subjekt nima intervalov zamišljanja T1 ali T2
+  
+      f = [0 8 8 13 13 fs/2]/(fs/2); %definicija filtra
+      a = [0 0 1 1 0 0 ];
+      n= 35; 
+      b = firls(n, f, a);
 
-  f = [0 8 8 13 13 fs/2]/(fs/2); 
-  a = [0 0 1 1 0 0 ];
-  n= 35; 
-  b = firls(n, f, a);
+      %[W] = f_CSP(filter(b, 1, cell2mat(t1s(1))), filter(b, 1, cell2mat(t2s(1))));
+      izpis=strcat("Izvajam CSP za subjekta ",subj);
+      disp(izpis);
+      [W] = f_CSP( cell2mat(t1s(1)),  cell2mat(t2s(1))); %izvedemo csp
 
+      t1s(1)=[];
+      t2s(1)=[];
 
-  %[W] = f_CSP(filter(b, 1, cell2mat(t1s(1))), filter(b, 1, cell2mat(t2s(1))));
-  [W] = f_CSP( cell2mat(t1s(1)),  cell2mat(t2s(1)));
+      lvt1=[];
+      lvt2=[];
 
-  t1s(1)=[];
-  t2s(1)=[];
+      for i=1:size(t1s,2)
+          %tmp = (W*filter(b, 1,cell2mat(t1s(i))));
+          tmp = (W*cell2mat(t1s(i)));
+          tmp = [tmp(1,:).', tmp(size(tmp,1),:).' ].';
+          tmp = filter(b, 1, tmp);
+          lvt1(i,1) = log(var(tmp(1,:)));
+          lvt1(i,2) = log(var(tmp(2,:)));      
+      end
+      for i=1:size(t2s,2)
+          %tmp = (W*filter(b, 1,cell2mat(t2s(i))));
+          tmp = (W*cell2mat(t2s(i)));
+          tmp = [tmp(1,:).', tmp(size(tmp,1),:).' ].';
+          tmp = filter(b, 1, tmp);
+          lvt2(i,1) = log(var(tmp(1,:)));
+          lvt2(i,2) = log(var(tmp(2,:)));      
+      end
+
+      %scatter(lvt1(:,1), lvt1(:,2));
+      %hold on
+      %scatter(lvt2(:,1), lvt2(:,2)); 
+
+      featVFile = strcat(subject,'featureVectors.txt');
+      classFile = strcat(subject,'referenceClass.txt');
+
+      fvf = fopen(featVFile, "wt");
+      rcf = fopen(classFile, "wt");
+
+      for i=1:size(lvt1,1)
+          fprintf(fvf, "%.8f %.8f\n", lvt1(i,1), lvt1(i,2));
+          fprintf(rcf, "T1\n");
+      end
+
+      for i=1:size(lvt2,1)
+          fprintf(fvf, "%.8f %.8f\n", lvt2(i,1), lvt2(i,2));
+          fprintf(rcf, "T2\n");
+      end
+      fclose(fvf);
+      fclose(rcf);
   
-  lvt1=[];
-  lvt2=[];
-  
-  for i=1:size(t1s,2)
-      %tmp = (W*filter(b, 1,cell2mat(t1s(i))));
-      tmp = (W*cell2mat(t1s(i)));
-      tmp = [tmp(1,:).', tmp(size(tmp,1),:).' ].';
-      tmp = filter(b, 1, tmp);
-      lvt1(i,1) = log(var(tmp(1,:)));
-      lvt1(i,2) = log(var(tmp(2,:)));      
   end
-  for i=1:size(t2s,2)
-      %tmp = (W*filter(b, 1,cell2mat(t2s(i))));
-      tmp = (W*cell2mat(t2s(i)));
-      tmp = [tmp(1,:).', tmp(size(tmp,1),:).' ].';
-      tmp = filter(b, 1, tmp);
-      lvt2(i,1) = log(var(tmp(1,:)));
-      lvt2(i,2) = log(var(tmp(2,:)));      
-  end
-  
-  scatter(lvt1(:,1), lvt1(:,2));
-  hold on
-  scatter(lvt2(:,1), lvt2(:,2)); 
-  
-  featVFile = strcat(subject,'featureVectors.txt');
-  classFile = strcat(subject,'referenceClass.txt');
-  
-  fvf = fopen(featVFile, "wt");
-  rcf = fopen(classFile, "wt");
-  
-  for i=1:size(lvt1,1)
-      fprintf(fvf, "%.8f %.8f\n", lvt1(i,1), lvt1(i,2));
-      fprintf(rcf, "T1\n");
-  end
-  
-  for i=1:size(lvt2,1)
-      fprintf(fvf, "%.8f %.8f\n", lvt2(i,1), lvt2(i,2));
-      fprintf(rcf, "T2\n");
-  end
-  fclose(fvf);
-  fclose(rcf);
       
 end
 
