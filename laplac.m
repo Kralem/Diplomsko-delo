@@ -123,7 +123,7 @@ ylim([-100, 100]);
       lvt1(i,2) = log(var(tmp(2,:)));     
   end
 file = 'intervali.txt';
-fp = fopen(file, "rt+");
+fp = fopen(file, "at+");
 fprintf(fp, "Subjekt: %s \n", subj);
 fprintf(fp, "Dolzina intervalov v sekundah leva roka: %.8f \n", mean(lengths_of_intervals_in_seconds_left));
 fprintf(fp, "T1: %d \n", size(lvt1,1));
