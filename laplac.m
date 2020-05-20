@@ -122,6 +122,12 @@ ylim([-100, 100]);
       lvt1(i,1) = log(var(tmp(1,:)));
       lvt1(i,2) = log(var(tmp(2,:)));     
   end
+file = 'intervali.txt';
+fp = fopen(file, "rt+");
+fprintf(fp, "Subjekt: %s \n", subj);
+fprintf(fp, "Dolzina intervalov v sekundah leva roka: %.8f \n", mean(lengths_of_intervals_in_seconds_left));
+fprintf(fp, "T1: %d \n", size(lvt1,1));
+  
 
 % Dolzine intervalov zamisljanja aktivnosti leve roke v vzorcih
 lengths_of_intervals_in_samlpes_left
@@ -190,6 +196,11 @@ ylim([-100, 100]);
       lvt2(i,1) = log(var(tmp(1,:)));
       lvt2(i,2) = log(var(tmp(2,:)));     
   end
+
+fprintf(fp, "Dolzina intervalov v sekundah desna roka: %.8f \n", mean(lengths_of_intervals_in_seconds_right));
+fprintf(fp, "T2: %d \n", size(lvt2,1));
+fprintf(fp, "============================================================ \n");
+fclose(fp);
 
 % Dolzine intervalov zamisljanja aktivnosti desne roke v vzorcih
 lengths_of_intervals_in_samlpes_right
