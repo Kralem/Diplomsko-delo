@@ -54,10 +54,10 @@ function laplac(subj, rec)
       n = 35; 
       b = firls(n, f, a);
       
-      win_index_shift = 100; % ce ne vizualizira signale zamisljanj obeh rok v isto sliko
+      %win_index_shift = 100; % ce ne vizualizira signale zamisljanj obeh rok v isto sliko
       
-      t1s(1)=[];
-      t2s(1)=[];
+      %t1s(1)=[];
+      %t2s(1)=[];
 
       lvt1=[];
       lvt2=[];
@@ -81,17 +81,17 @@ lengths_of_intervals_in_seconds_left = [];
 
 % Slike signalov za intervale zamisljanja leve roke pred filtriranjem (slike od 1 naprej)
 
-figure(i)
+%figure(i)
 
 %%%%     length(tmp(1,:)))       dolzina zamisljanja aktivnosti leve roke v vzorcih za ta interval
 %%%%     length(tmp(1,:))*1/fs)  dolzina zamisljanja aktivnosti leve roke v sekundah za ta interval
 
 %%%%    tmp(1,:)                 prvi signal v prostoru stanj (na polozaju 1 v matriki) pred filtriranjem
-plot(tmp(1,:))                 % Prvi signal, Slika je v samplih signala po X osi
-ylim([-1000, 1000]);
-hold on                        % naslednji signa bo v isti sliki
-plot(tmp(size(tmp,1),:))       % Drugi signal, Slika je v samplih signala po X osi
-ylim([-1000, 1000]);
+%plot(tmp(1,:))                 % Prvi signal, Slika je v samplih signala po X osi
+%ylim([-1000, 1000]);
+%hold on                        % naslednji signa bo v isti sliki
+%plot(tmp(size(tmp,1),:))       % Drugi signal, Slika je v samplih signala po X osi
+%ylim([-1000, 1000]);
 %%%%    tmp(size(tmp,1),:)       drugi signal v prostoru stanj (na polozaju 64 v matriki) pred filtriranjem
 
 lengths_of_intervals_in_samlpes_left = [lengths_of_intervals_in_samlpes_left, length(tmp(1,:))];
@@ -103,16 +103,16 @@ lengths_of_intervals_in_seconds_left = [lengths_of_intervals_in_seconds_left, le
 
 % Slike signalov za intervale zamisljanja leve roke PO filtriranju (slike od 100 naprej)
 
-figure(i+win_index_shift)
+%figure(i+win_index_shift)
 %%%%     length(tmp(1,:)))       dolzina zamisljanja aktivnosti leve roke v vzorcih za ta interval
 %%%%     length(tmp(1,:))*1/fs)  dolzina zamisljanja aktivnosti leve roke v sekundah za ta interval
 
 %%%%     tmp(1,:)                prvi signal v prostoru stanj PO filtriranju (na polozaju 1 v matriki)
-plot(tmp(1,:))  % Prvi signal,   Slika je v samplih signala po X osi
-ylim([-100, 100]);
-hold on
-plot(tmp(2,:))  % Drugi signal,  Slika je v samplih signala po X osi
-ylim([-100, 100]);
+%plot(tmp(1,:))  % Prvi signal,   Slika je v samplih signala po X osi
+%ylim([-100, 100]);
+%hold on
+%plot(tmp(2,:))  % Drugi signal,  Slika je v samplih signala po X osi
+%ylim([-100, 100]);
 %%%%     tmp(2,:)                drugi signal v prostoru stanj PO filtriranju (na polozaju 2 v matriki)
 
 %% Na tem mestu se filtrirani intervali zamisljanj leve roke (po dva signala v prostoru stanj)
@@ -122,10 +122,16 @@ ylim([-100, 100]);
       lvt1(i,1) = log(var(tmp(1,:)));
       lvt1(i,2) = log(var(tmp(2,:)));     
   end
+
+[mrows, ncols] = size(lengths_of_intervals_in_seconds_left);
+outputstr = ['%' num2str(mrows) '.4f ']; % template for the string, you put your datatype here
+outputstr = repmat(outputstr, 1, ncols); % replicate it to match the number of columns
+outputstr = [outputstr '\n']; % add a new line if you want 
+  
 file = 'intervali.txt';
 fp = fopen(file, "at+");
 fprintf(fp, "Subjekt: %s \n", subj);
-fprintf(fp, "Dolzina intervalov v sekundah leva roka: %.8f \n", mean(lengths_of_intervals_in_seconds_left));
+fprintf(fp, outputstr, lengths_of_intervals_in_seconds_left);
 fprintf(fp, "T1: %d \n", size(lvt1,1));
   
 
@@ -154,17 +160,17 @@ lengths_of_intervals_in_seconds_right = [];
 
 % Slike signalov za intervale zamisljanja desne roke pred filtriranjem (slike od 200 naprej)
 
-figure(i+2*win_index_shift)
+%figure(i+2*win_index_shift)
 
 %%%%    length(tmp(1,:)))        dolzina zamisljanja aktivnosti desne roke v vzorcih za ta interval
 %%%%    length(tmp(1,:))*1/fs)   dolzina zamisljanja aktivnosti desne roke v sekundah za ta interval
 
 %%%%    tmp(1,:)                 prvi signal v prostoru stanj (na polozaju 1 v matriki) pred filtriranjem
-plot(tmp(1,:))                 % Prvi signal, Slika je v samplih signala po X osi
-ylim([-1000, 1000]);
-hold on                        % naslednji signa bo v isti sliki
-plot(tmp(size(tmp,1),:))       % Drugi signal, Slika je v samplih signala po X osi
-ylim([-1000, 1000]);
+%plot(tmp(1,:))                 % Prvi signal, Slika je v samplih signala po X osi
+%ylim([-1000, 1000]);
+%hold on                        % naslednji signa bo v isti sliki
+%plot(tmp(size(tmp,1),:))       % Drugi signal, Slika je v samplih signala po X osi
+%ylim([-1000, 1000]);
 %%%%    tmp(size(tmp,1),:)       drugi signal v prostoru stanj (na polozaju 64 v matriki) pred filtriranjem
 
 lengths_of_intervals_in_samlpes_right = [lengths_of_intervals_in_samlpes_right, length(tmp(1,:))];
@@ -176,17 +182,17 @@ lengths_of_intervals_in_seconds_right = [lengths_of_intervals_in_seconds_right, 
 
 % Slike signalov za intervale zamisljanja desne roke PO filtriranju (slike od 300 dalje)
 
-figure(i+3*win_index_shift)
+%figure(i+3*win_index_shift)
 
 %%%%    length(tmp(1,:)))        dolzina zamisljanja aktivnosti desne roke v vzorcih za ta interval
 %%%%    length(tmp(1,:))*1/fs)   dolzina zamisljanja aktivnosti desne roke v sekundah za ta interval
 
 %%%%    tmp(1,:)                 prvi signal v prostoru stanj PO filtriranju (na polozaju 1 v matriki)
-plot(tmp(1,:))  % Prvi signal,   Slika je v samplih signala po X osi
-ylim([-100, 100]);
-hold on                        % naslednji signa bo v isti sliki
-plot(tmp(2,:))  % Drugi signal,  Slika je v samplih signala po X osi
-ylim([-100, 100]);
+%plot(tmp(1,:))  % Prvi signal,   Slika je v samplih signala po X osi
+%ylim([-100, 100]);
+%hold on                        % naslednji signa bo v isti sliki
+%plot(tmp(2,:))  % Drugi signal,  Slika je v samplih signala po X osi
+%ylim([-100, 100]);
 %%%%    tmp(2,:)                 drugi signal v prostoru stanj PO filtriranju (na polozaju 2 v matriki)
 
 %% Na tem mestu se filtrirani intervali zamisljanj leve roke (po dva signala v prostoru stanj)
@@ -197,9 +203,14 @@ ylim([-100, 100]);
       lvt2(i,2) = log(var(tmp(2,:)));     
   end
 
-fprintf(fp, "Dolzina intervalov v sekundah desna roka: %.8f \n", mean(lengths_of_intervals_in_seconds_right));
+[mrows2, ncols2] = size(lengths_of_intervals_in_seconds_right);
+outputstr2 = ['%' num2str(mrows2) '.4f ']; % template for the string, you put your datatype here
+outputstr2 = repmat(outputstr2, 1, ncols2); % replicate it to match the number of columns
+outputstr2 = [outputstr2 '\n']; % add a new line if you want   
+  
+fprintf(fp, outputstr2, lengths_of_intervals_in_seconds_right);
 fprintf(fp, "T2: %d \n", size(lvt2,1));
-fprintf(fp, "============================================================ \n");
+fprintf(fp, "================================================================== \n");
 fclose(fp);
 
 % Dolzine intervalov zamisljanja aktivnosti desne roke v vzorcih
@@ -211,32 +222,32 @@ lengths_of_intervals_in_seconds_right
 
 
 
-figure(4*win_index_shift)  %% Slika 500 Diagram raztrosa znacilk
+%figure(4*win_index_shift)  %% Slika 500 Diagram raztrosa znacilk
 
-      scatter(lvt1(:,1), lvt1(:,2));
-      hold on
-      scatter(lvt2(:,1), lvt2(:,2)); 
+      %scatter(lvt1(:,1), lvt1(:,2));
+      %hold on
+      %scatter(lvt2(:,1), lvt2(:,2)); 
      
       dimenzija=size(sig);
       dimenzija %izpis dimenzije, mora biti približno 2x20000
 
 
-      featVFile = strcat(subject,'featureVectorsL.txt');
-      classFile = strcat(subject,'referenceClassL.txt');
-      fvf = fopen(featVFile, "wt");
-      rcf = fopen(classFile, "wt");
+      %featVFile = strcat(subject,'featureVectorsL.txt');
+      %classFile = strcat(subject,'referenceClassL.txt');
+      %fvf = fopen(featVFile, "wt");
+      %rcf = fopen(classFile, "wt");
 
-      for i=1:size(lvt1,1)
-          fprintf(fvf, "%.8f %.8f\n", lvt1(i,1), lvt1(i,2));
-          fprintf(rcf, "T1\n");
-      end
+      %for i=1:size(lvt1,1)
+      %    fprintf(fvf, "%.8f %.8f\n", lvt1(i,1), lvt1(i,2));
+      %    fprintf(rcf, "T1\n");
+      %end
 
-      for i=1:size(lvt2,1)
-          fprintf(fvf, "%.8f %.8f\n", lvt2(i,1), lvt2(i,2));
-          fprintf(rcf, "T2\n");
-      end
-      fclose(fvf);
-      fclose(rcf);
+      %for i=1:size(lvt2,1)
+      %    fprintf(fvf, "%.8f %.8f\n", lvt2(i,1), lvt2(i,2));
+      %    fprintf(rcf, "T2\n");
+      %end
+      %fclose(fvf);
+      %fclose(rcf);
   
   end
   

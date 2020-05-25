@@ -21,13 +21,13 @@ function izracunZnacilkPopravljeno(subj, rec)
     sig=sig';
 
     for j=1:size(T1, 1)
-      t1s{end+1}=sig(:, T1(j,1):T1(j,2));
+      t1s{end+1}=sig(:, T1(j,1):T1(j,1) + 3.0 * fs);
     end
 disp('T1')
 disp(T1) % Tu so zacetni in koncni indeksi intervalov zamisljanja leve roke
 
     for j=1:size(T2,1)
-      t2s{end+1}=sig(:, T2(j,1):T2(j,2));
+      t2s{end+1}=sig(:, T2(j,1):T2(j,1) + 3.0 * fs);
     end
 disp('T2')
 disp(T2) % Tu so zacetni in koncni indeksi intervalov zamisljanja desne roke
@@ -51,8 +51,8 @@ disp(T2) % Tu so zacetni in koncni indeksi intervalov zamisljanja desne roke
 % Metoda CSP Common Spatial Patterns
 
 
-  t1s(1)=[];
-  t2s(1)=[];
+  %t1s(1)=[];
+  %t2s(1)=[];
   
   lvt1=[];
   lvt2=[];
