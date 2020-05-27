@@ -32,6 +32,9 @@ disp(T1) % Tu so zacetni in koncni indeksi intervalov zamisljanja leve roke
 disp('T2')
 disp(T2) % Tu so zacetni in koncni indeksi intervalov zamisljanja desne roke
   end
+  
+  
+if size(t1s,2) > 0 && size(t2s,2) > 0 %varovalka, če subjekt nima intervalov zamišljanja T1 ali T2
 
 %% fs = 160
 
@@ -59,7 +62,7 @@ disp(T2) % Tu so zacetni in koncni indeksi intervalov zamisljanja desne roke
 
 %%%%
 
-win_index_shift = 100; % ce ne vizualizira signale zamisljanj obeh rok v isto sliko
+%win_index_shift = 100; % ce ne vizualizira signale zamisljanj obeh rok v isto sliko
 
 lengths_of_intervals_in_samlpes_left = [];
 lengths_of_intervals_in_seconds_left = [];
@@ -80,17 +83,17 @@ lengths_of_intervals_in_seconds_left = [];
 
 % Slike signalov za intervale zamisljanja leve roke pred filtriranjem (slike od 1 naprej)
 
-figure(i)
+%figure(i)
 
 %%%%     length(tmp(1,:)))       dolzina zamisljanja aktivnosti leve roke v vzorcih za ta interval
 %%%%     length(tmp(1,:))*1/fs)  dolzina zamisljanja aktivnosti leve roke v sekundah za ta interval
 
 %%%%    tmp(1,:)                 prvi signal v prostoru stanj (na polozaju 1 v matriki) pred filtriranjem
-plot(tmp(1,:))                 % Prvi signal, Slika je v samplih signala po X osi
-ylim([-1000, 1000]);
-hold on                        % naslednji signa bo v isti sliki
-plot(tmp(size(tmp,1),:))       % Drugi signal, Slika je v samplih signala po X osi
-ylim([-1000, 1000]);
+%plot(tmp(1,:))                 % Prvi signal, Slika je v samplih signala po X osi
+%ylim([-1000, 1000]);
+%hold on                        % naslednji signa bo v isti sliki
+%plot(tmp(size(tmp,1),:))       % Drugi signal, Slika je v samplih signala po X osi
+%ylim([-1000, 1000]);
 %%%%    tmp(size(tmp,1),:)       drugi signal v prostoru stanj (na polozaju 64 v matriki) pred filtriranjem
 
 lengths_of_intervals_in_samlpes_left = [lengths_of_intervals_in_samlpes_left, length(tmp(1,:))];
@@ -102,16 +105,16 @@ lengths_of_intervals_in_seconds_left = [lengths_of_intervals_in_seconds_left, le
 
 % Slike signalov za intervale zamisljanja leve roke PO filtriranju (slike od 100 naprej)
 
-figure(i+win_index_shift)
+%figure(i+win_index_shift)
 %%%%     length(tmp(1,:)))       dolzina zamisljanja aktivnosti leve roke v vzorcih za ta interval
 %%%%     length(tmp(1,:))*1/fs)  dolzina zamisljanja aktivnosti leve roke v sekundah za ta interval
 
 %%%%     tmp(1,:)                prvi signal v prostoru stanj PO filtriranju (na polozaju 1 v matriki)
-plot(tmp(1,:))  % Prvi signal,   Slika je v samplih signala po X osi
-ylim([-100, 100]);
-hold on
-plot(tmp(2,:))  % Drugi signal,  Slika je v samplih signala po X osi
-ylim([-100, 100]);
+%plot(tmp(1,:))  % Prvi signal,   Slika je v samplih signala po X osi
+%ylim([-100, 100]);
+%hold on
+%plot(tmp(2,:))  % Drugi signal,  Slika je v samplih signala po X osi
+%ylim([-100, 100]);
 %%%%     tmp(2,:)                drugi signal v prostoru stanj PO filtriranju (na polozaju 2 v matriki)
 
 %% Na tem mestu se filtrirani intervali zamisljanj leve roke (po dva signala v prostoru stanj)
@@ -147,17 +150,17 @@ lengths_of_intervals_in_seconds_right = [];
 
 % Slike signalov za intervale zamisljanja desne roke pred filtriranjem (slike od 200 naprej)
 
-figure(i+2*win_index_shift)
+%figure(i+2*win_index_shift)
 
 %%%%    length(tmp(1,:)))        dolzina zamisljanja aktivnosti desne roke v vzorcih za ta interval
 %%%%    length(tmp(1,:))*1/fs)   dolzina zamisljanja aktivnosti desne roke v sekundah za ta interval
 
 %%%%    tmp(1,:)                 prvi signal v prostoru stanj (na polozaju 1 v matriki) pred filtriranjem
-plot(tmp(1,:))                 % Prvi signal, Slika je v samplih signala po X osi
-ylim([-1000, 1000]);
-hold on                        % naslednji signa bo v isti sliki
-plot(tmp(size(tmp,1),:))       % Drugi signal, Slika je v samplih signala po X osi
-ylim([-1000, 1000]);
+%plot(tmp(1,:))                 % Prvi signal, Slika je v samplih signala po X osi
+%ylim([-1000, 1000]);
+%hold on                        % naslednji signa bo v isti sliki
+%plot(tmp(size(tmp,1),:))       % Drugi signal, Slika je v samplih signala po X osi
+%ylim([-1000, 1000]);
 %%%%    tmp(size(tmp,1),:)       drugi signal v prostoru stanj (na polozaju 64 v matriki) pred filtriranjem
 
 lengths_of_intervals_in_samlpes_right = [lengths_of_intervals_in_samlpes_right, length(tmp(1,:))];
@@ -169,17 +172,17 @@ lengths_of_intervals_in_seconds_right = [lengths_of_intervals_in_seconds_right, 
 
 % Slike signalov za intervale zamisljanja desne roke PO filtriranju (slike od 300 dalje)
 
-figure(i+3*win_index_shift)
+%figure(i+3*win_index_shift)
 
 %%%%    length(tmp(1,:)))        dolzina zamisljanja aktivnosti desne roke v vzorcih za ta interval
 %%%%    length(tmp(1,:))*1/fs)   dolzina zamisljanja aktivnosti desne roke v sekundah za ta interval
 
 %%%%    tmp(1,:)                 prvi signal v prostoru stanj PO filtriranju (na polozaju 1 v matriki)
-plot(tmp(1,:))  % Prvi signal,   Slika je v samplih signala po X osi
-ylim([-100, 100]);
-hold on                        % naslednji signa bo v isti sliki
-plot(tmp(2,:))  % Drugi signal,  Slika je v samplih signala po X osi
-ylim([-100, 100]);
+%plot(tmp(1,:))  % Prvi signal,   Slika je v samplih signala po X osi
+%ylim([-100, 100]);
+%hold on                        % naslednji signa bo v isti sliki
+%plot(tmp(2,:))  % Drugi signal,  Slika je v samplih signala po X osi
+%ylim([-100, 100]);
 %%%%    tmp(2,:)                 drugi signal v prostoru stanj PO filtriranju (na polozaju 2 v matriki)
 
 %% Na tem mestu se filtrirani intervali zamisljanj leve roke (po dva signala v prostoru stanj)
@@ -199,11 +202,11 @@ lengths_of_intervals_in_seconds_right
 
 
 
-figure(4*win_index_shift)  %% Slika 500 Diagram raztrosa znacilk
+%figure(4*win_index_shift)  %% Slika 500 Diagram raztrosa znacilk
 
-  scatter(lvt1(:,1), lvt1(:,2));
-  hold on
-  scatter(lvt2(:,1), lvt2(:,2)); 
+  %scatter(lvt1(:,1), lvt1(:,2));
+  %hold on
+  %scatter(lvt2(:,1), lvt2(:,2)); 
   
   featVFile = strcat(subject,'featureVectors.txt');
   classFile = strcat(subject,'referenceClass.txt');
@@ -223,6 +226,8 @@ figure(4*win_index_shift)  %% Slika 500 Diagram raztrosa znacilk
   fclose(fvf);
   fclose(rcf);
       
+end
+
 end
 
 function [newVectors, meanValue] = remmean(vectors)

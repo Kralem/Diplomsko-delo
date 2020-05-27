@@ -10,9 +10,9 @@ for i=1:109
     disp(num2str(i));
     out=strcat(s,num2str(i));
     disp(out);
-    laplac(out, 4) %kličemo funkcijo laplace za izračun značilk
-    if i~= 89 %S089 je problematičen subjekt, zato ga izpustimo
+    if i~=89 && i ~= 88 && i ~= 92 && i~=100 && i~=104 %problematični subjekti
+        laplac(out, 4)
         movefile(strcat(out,'featureVectorsL.txt'),'rezultatiL'); %premaknemo .txt datoteki
         movefile(strcat(out,'referenceClassL.txt'),'rezultatiL'); %na levi ime .txt datoteke, na desni ime direktorija
     end
-    end
+end

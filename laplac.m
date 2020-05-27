@@ -35,10 +35,10 @@ function laplac(subj, rec)
     izpis=strcat("Berem intervale za subjekta ",recName);
     disp(izpis);
     for j=1:size(T1, 1)  %preberemo intervale zamišljanja motoričnih aktivnosti
-      t1s{end+1}=sig(:, T1(j,1):T1(j,2));
+      t1s{end+1}=sig(:, T1(j,1):T1(j,1)+3.0*fs);
     end
     for j=1:size(T2,1)
-      t2s{end+1}=sig(:, T2(j,1):T2(j,2));
+      t2s{end+1}=sig(:, T2(j,1):T2(j,1)+3.0*fs);
     end
   end
   
@@ -123,16 +123,16 @@ lengths_of_intervals_in_seconds_left = [lengths_of_intervals_in_seconds_left, le
       lvt1(i,2) = log(var(tmp(2,:)));     
   end
 
-[mrows, ncols] = size(lengths_of_intervals_in_seconds_left);
-outputstr = ['%' num2str(mrows) '.4f ']; % template for the string, you put your datatype here
-outputstr = repmat(outputstr, 1, ncols); % replicate it to match the number of columns
-outputstr = [outputstr '\n']; % add a new line if you want 
+%[mrows, ncols] = size(lengths_of_intervals_in_seconds_left);
+%outputstr = ['%' num2str(mrows) '.4f ']; % template for the string, you put your datatype here
+%outputstr = repmat(outputstr, 1, ncols); % replicate it to match the number of columns
+%outputstr = [outputstr '\n']; % add a new line if you want 
   
-file = 'intervali.txt';
-fp = fopen(file, "at+");
-fprintf(fp, "Subjekt: %s \n", subj);
-fprintf(fp, outputstr, lengths_of_intervals_in_seconds_left);
-fprintf(fp, "T1: %d \n", size(lvt1,1));
+%file = 'intervali.txt';
+%fp = fopen(file, "at+");
+%fprintf(fp, "Subjekt: %s \n", subj);
+%fprintf(fp, outputstr, lengths_of_intervals_in_seconds_left);
+%fprintf(fp, "T1: %d \n", size(lvt1,1));
   
 
 % Dolzine intervalov zamisljanja aktivnosti leve roke v vzorcih
@@ -203,15 +203,15 @@ lengths_of_intervals_in_seconds_right = [lengths_of_intervals_in_seconds_right, 
       lvt2(i,2) = log(var(tmp(2,:)));     
   end
 
-[mrows2, ncols2] = size(lengths_of_intervals_in_seconds_right);
-outputstr2 = ['%' num2str(mrows2) '.4f ']; % template for the string, you put your datatype here
-outputstr2 = repmat(outputstr2, 1, ncols2); % replicate it to match the number of columns
-outputstr2 = [outputstr2 '\n']; % add a new line if you want   
+%[mrows2, ncols2] = size(lengths_of_intervals_in_seconds_right);
+%outputstr2 = ['%' num2str(mrows2) '.4f ']; % template for the string, you put your datatype here
+%outputstr2 = repmat(outputstr2, 1, ncols2); % replicate it to match the number of columns
+%outputstr2 = [outputstr2 '\n']; % add a new line if you want   
   
-fprintf(fp, outputstr2, lengths_of_intervals_in_seconds_right);
-fprintf(fp, "T2: %d \n", size(lvt2,1));
-fprintf(fp, "================================================================== \n");
-fclose(fp);
+%fprintf(fp, outputstr2, lengths_of_intervals_in_seconds_right);
+%fprintf(fp, "T2: %d \n", size(lvt2,1));
+%fprintf(fp, "================================================================== \n");
+%fclose(fp);
 
 % Dolzine intervalov zamisljanja aktivnosti desne roke v vzorcih
 lengths_of_intervals_in_samlpes_right
@@ -232,22 +232,22 @@ lengths_of_intervals_in_seconds_right
       dimenzija %izpis dimenzije, mora biti približno 2x20000
 
 
-      %featVFile = strcat(subject,'featureVectorsL.txt');
-      %classFile = strcat(subject,'referenceClassL.txt');
-      %fvf = fopen(featVFile, "wt");
-      %rcf = fopen(classFile, "wt");
+      featVFile = strcat(subject,'featureVectorsL.txt');
+      classFile = strcat(subject,'referenceClassL.txt');
+      fvf = fopen(featVFile, "wt");
+      rcf = fopen(classFile, "wt");
 
-      %for i=1:size(lvt1,1)
-      %    fprintf(fvf, "%.8f %.8f\n", lvt1(i,1), lvt1(i,2));
-      %    fprintf(rcf, "T1\n");
-      %end
+      for i=1:size(lvt1,1)
+          fprintf(fvf, "%.8f %.8f\n", lvt1(i,1), lvt1(i,2));
+          fprintf(rcf, "T1\n");
+      end
 
-      %for i=1:size(lvt2,1)
-      %    fprintf(fvf, "%.8f %.8f\n", lvt2(i,1), lvt2(i,2));
-      %    fprintf(rcf, "T2\n");
-      %end
-      %fclose(fvf);
-      %fclose(rcf);
+      for i=1:size(lvt2,1)
+          fprintf(fvf, "%.8f %.8f\n", lvt2(i,1), lvt2(i,2));
+          fprintf(rcf, "T2\n");
+      end
+      fclose(fvf);
+      fclose(rcf);
   
   end
   
