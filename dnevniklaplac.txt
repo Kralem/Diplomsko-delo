@@ -1,4 +1,4 @@
-skriptalaplac
+PODATKI: FD=3*FS, NREP=50, FOLDS=10
 S001
 Size: 45x2; EVENT: T1; NON-EVENT: T2
 LDA
