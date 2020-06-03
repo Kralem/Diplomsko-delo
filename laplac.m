@@ -34,12 +34,26 @@ function laplac(subj, rec)
     sig=sig_tmp;
     izpis=strcat("Berem intervale za subjekta ",recName);
     disp(izpis);
-    for j=1:size(T1, 1)  %preberemo intervale zamišljanja motoričnih aktivnosti
-      t1s{end+1}=sig(:, T1(j,1):T1(j,1)+3.0*fs);
+    sec = 4.0;
+    fd = sec * fs;
+    [m,l] = size(sig);
+    
+    for j=1:size(T1, 1)
+      if (T1(j,1) + fd) > l
+          t1s{end+1}=sig(:, T1(j,1):l);
+      else
+          t1s{end+1}=sig(:, T1(j,1):T1(j,1) + fd);
+      end
     end
-    for j=1:size(T2,1)
-      t2s{end+1}=sig(:, T2(j,1):T2(j,1)+3.0*fs);
-    end
+    
+   for j=1:size(T2,1)
+      if (T2(j,1) + fd) > l
+          t2s{end+1}=sig(:, T2(j,1):l);
+      else
+          t2s{end+1}=sig(:, T2(j,1):T2(j,1) + fd);
+      end
+      
+   end
   end
   
   if size(t1s,2) > 0 && size(t2s,2) > 0 %varovalka, če subjekt nima intervalov zamišljanja T1 ali T2

@@ -20,21 +20,63 @@ function izracunZnacilkPopravljeno(subj, rec)
     [T0, T1, T2] = getIntervals(recName,'event', fs, size(sig,1));
     sig=sig';
 
+    sec = 4.0;
+    fd = fs* sec;
+    
+    [m,n] = size(sig);
+    
     for j=1:size(T1, 1)
-      t1s{end+1}=sig(:, T1(j,1):T1(j,1) + 3.0 * fs);
+      if (T1(j,1) + fd) > n
+          t1s{end+1}=sig(:, T1(j,1):n);
+      else
+          t1s{end+1}=sig(:, T1(j,1):T1(j,1) + fd);
+      end
     end
 disp('T1')
 disp(T1) % Tu so zacetni in koncni indeksi intervalov zamisljanja leve roke
 
     for j=1:size(T2,1)
-      t2s{end+1}=sig(:, T2(j,1):T2(j,1) + 3.0 * fs);
+      if (T2(j,1) + fd) > n
+          t2s{end+1}=sig(:, T2(j,1):n);
+      else
+          t2s{end+1}=sig(:, T2(j,1):T2(j,1) + fd);
+      end
+      
     end
-disp('T2')
-disp(T2) % Tu so zacetni in koncni indeksi intervalov zamisljanja desne roke
+    
+    disp('T2')
+disp(T2)
+%disp(T2) % Tu so zacetni in koncni indeksi intervalov zamisljanja desne roke
   end
   
   
 if size(t1s,2) > 0 && size(t2s,2) > 0 %varovalka, če subjekt nima intervalov zamišljanja T1 ali T2
+    
+    
+N_int_povp = 5; % Stevilo intervalov za povprecna intervala (pet)
+% Povprecje za intervale leve roke
+t1s_mean = cell2mat(t1s(1));
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+for j = 2: N_int_povp  % size(T1,2)  % V povprecje vkljucim prvih pet intervalov leve roke, size(T1,2) bi bili vsi intervali
+  t1s_mean = t1s_mean + cell2mat(t1s(j));
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+t1s_mean = t1s_mean / size(T1,2);
+size(t1s_mean)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Povprecje za intervale desne roke
+t2s_mean = cell2mat(t2s(1));
+for j = 2: N_int_povp  % size(T2,2) % V povprecje vkljucim prvih pet intervalov desne roke, size(Ts,2) bi bili vsi intervali desno
+  t2s_mean = t2s_mean + cell2mat(t2s(j));
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+t2s_mean = t2s_mean / size(T2,2);
+size(t2s_mean)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%tmp1 = t1s_mean;
+%tmp2 = t2s_mean;
 
 %% fs = 160
 
@@ -50,8 +92,10 @@ if size(t1s,2) > 0 && size(t2s,2) > 0 %varovalka, če subjekt nima intervalov za
 %   [W] = f_CSP(filter(b, 1, cell2mat(t1s(1))), filter(b, 1, cell2mat(t2s(1))));
 
 % Metoda CSP Common Spatial Patterns
-   [W] = f_CSP( cell2mat(t1s(1)),  cell2mat(t2s(1)));
+%   [W] = f_CSP( cell2mat(t1s(1)),  cell2mat(t2s(1)));
 % Metoda CSP Common Spatial Patterns
+
+[W] = f_CSP( t1s_mean,  t2s_mean);
 
 
   %t1s(1)=[];
