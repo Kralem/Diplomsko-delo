@@ -1,0 +1,2 @@
+Cross-valid-Test  Nrep  TP=742 FN=1604; FP=527 TN=1808; Se:  31.63 Sp:  77.43 CA:  54.48 AUC:  55.35 csp
+Cross-valid-Test  Nrep  TP=685 FN=1661; FP=674 TN=1660; Se:  29.20 Sp:  71.12 CA:  50.11 AUC:  50.18 laplace
